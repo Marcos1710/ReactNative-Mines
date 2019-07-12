@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import Params from './Params'
 import MineField from './components/MineField'
+import Header from './components/Header'
 import {  createMinedBoard,
           cloneBoard,
           openField,
           hadExplosion,
           wonGame,
           showMines,
-          invertFlag
+          invertFlag,
+          flagUsed
        } from './Logica'
 
 export default class App extends Component {
@@ -58,7 +60,7 @@ export default class App extends Component {
     const won = wonGame(board)
 
     if (won) {
-      Alert.alert('Parabéns!', 'Você Venceu!')
+      Alert.alert('Parabéns', 'Você Venceu!')
     }
 
     this.setState({ board, won })
@@ -67,14 +69,12 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Bem Vindo ao Jogo!</Text>
-        <Text>
-          Tamanho da Grade do Jogo: {Params.getRowsAmount()} X {Params.getColumnsAmount()}
-        </Text>
+        <Header flagsLeft={this.minesAmount() - flagUsed(this.state.board)} 
+          onNewGame={() => this.setState(this.createState())}></Header>
         <View style={styles.board}>
           <MineField board={this.state.board} 
             onOpenField={this.onOpenField} 
-            onSelectField={this.onSelectField}/>
+            onSelectField={this.onSelectField} />
         </View>
       </View>
     )
